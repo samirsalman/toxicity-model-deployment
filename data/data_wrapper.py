@@ -20,6 +20,7 @@ class ToxicityDataset(Dataset):
         max_len: int,
         text_col: str,
         target_col: str,
+        is_test: bool = False,
     ) -> None:
         super().__init__()
         self.data = data
@@ -27,13 +28,16 @@ class ToxicityDataset(Dataset):
         self.max_len = max_len
         self.text_col = text_col
         self.target_col = target_col
+        self.is_test = is_test
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, index):
         text = self.data[self.text_col].tolist()[index]
-        target = self.data[self.target_col].tolist()[index]
+        target = (
+            self.data[self.target_col].tolist()[index] if not self.is_test else None
+        )
         tokenization = self.tokenizer.encode_plus(
             text,  # Sentence to encode.
             add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
@@ -45,7 +49,7 @@ class ToxicityDataset(Dataset):
         )
         return dict(
             text=text,
-            target=torch.tensor(target, dtype=torch.float32),
+            target=torch.tensor(target, dtype=torch.float32) if self.is_test else -1,
             attention_mask=tokenization["attention_mask"].flatten(),
             input_ids=tokenization["input_ids"].flatten(),
         )
@@ -85,12 +89,16 @@ class DataWrapper:
             if data is not None
         ]
 
-    def create_dataloaders(self, datasets: list[Dataset], batch_size: int):
+    def create_dataloaders(
+        self, datasets: list[Dataset], batch_size: int, num_workers: int = 8
+    ):
+
         return TorchData(
             train=DataLoader(
                 datasets[0],
                 batch_size=batch_size,
                 shuffle=True,
+                num_workers=num_workers,
             ),
             val=None
             if len(datasets) < 3
@@ -98,11 +106,13 @@ class DataWrapper:
                 datasets[1],
                 batch_size=batch_size,
                 shuffle=False,
+                num_workers=num_workers,
             ),
             test=DataLoader(
                 datasets[1] if len(datasets) < 3 else datasets[2],
                 batch_size=batch_size,
                 shuffle=False,
+                num_workers=num_workers,
             ),
         )
 

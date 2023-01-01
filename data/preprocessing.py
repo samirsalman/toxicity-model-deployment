@@ -12,7 +12,7 @@ class Preprocessor:
         self.lowercase = lowercase
         self.label_sum = label_sum
 
-    def pipeline(
+    def pipeline_df(
         self,
         data: pd.DataFrame,
         label_columns: list[str],
@@ -27,5 +27,16 @@ class Preprocessor:
 
         if self.label_sum:
             data["target"] = data[label_columns].sum(axis=1)
+
+        return data
+
+    def pipeline_list(
+        self,
+        data: list[str],
+    ):
+        if self.lowercase:
+            data = data.str.lower()
+        if self.clean:
+            data = data.strip()
 
         return data
