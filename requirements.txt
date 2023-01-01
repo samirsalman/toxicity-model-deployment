@@ -1,0 +1,7 @@
+pandas==1.4.2
+pytorch_lightning==1.8.6
+scikit_learn==1.2.0
+torch==2.0.0.dev20221231
+torchmetrics==0.9.3
+transformers==4.10.3
+typer==0.7.0
