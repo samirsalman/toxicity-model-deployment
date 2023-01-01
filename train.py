@@ -12,7 +12,7 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 
 
 def train(
-    data_path: str = Option("data/datasets/dataset.csv", "-d", "--dataset"),
+    data_path: str = Option("data/datasets/train.csv", "-d", "--dataset"),
     bert_model: str = Option("bert-base-cased", "-b", "--bert"),
     label_columns: List[str] = Option(
         [
@@ -45,8 +45,9 @@ def train(
         label_columns=label_columns,
         text_col=text_column,
     )
-
+    Path(data_outpath).mkdir(parents=True, exist_ok=True)
     dataset_path = Path(data_outpath) / "dataset.csv"
+
     data.to_csv(str(dataset_path), index=False)
 
     splitter = Splitter(

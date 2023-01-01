@@ -153,3 +153,4 @@ cython_debug/
 
 lightning_logs
 data/datasets
+.DS_Store
