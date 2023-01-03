@@ -40,7 +40,7 @@ def train(
     data = pd.read_csv(data_path)
 
     preprocessor = Preprocessor()
-    data = preprocessor.pipeline(
+    data = preprocessor.pipeline_df(
         data=data,
         label_columns=label_columns,
         text_col=text_column,
