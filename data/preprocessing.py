@@ -15,7 +15,7 @@ class Preprocessor:
     def pipeline_df(
         self,
         data: pd.DataFrame,
-        label_columns: list[str],
+        label_columns: List[str],
         text_col: str,
     ):
         if self.lowercase:
@@ -32,7 +32,7 @@ class Preprocessor:
 
     def pipeline_list(
         self,
-        data: list[str],
+        data: List[str],
     ):
         if self.lowercase:
             data = data.str.lower()

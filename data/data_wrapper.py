@@ -90,7 +90,7 @@ class DataWrapper:
         ]
 
     def create_dataloaders(
-        self, datasets: list[Dataset], batch_size: int, num_workers: int = 8
+        self, datasets: List[Dataset], batch_size: int, num_workers: int = 8
     ):
 
         return TorchData(
