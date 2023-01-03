@@ -32,8 +32,8 @@ class ToxicityClassifier(pl.LightningModule):
 
     def training_step(self, data, *args, **kwargs):
         out = self(attention_mask=data["attention_mask"], input_ids=data["input_ids"])
-        loss = self.criterion(out, data["target"])
-        mse = self.metric(out, data["target"])
+        loss = self.criterion(out, data["target"].float())
+        mse = self.metric(out, data["target"].float())
 
         self.log_dict(
             {"train_loss": loss, "train_mse": mse},
@@ -46,8 +46,8 @@ class ToxicityClassifier(pl.LightningModule):
 
     def validation_step(self, data, *args, **kwargs):
         out = self(attention_mask=data["attention_mask"], input_ids=data["input_ids"])
-        loss = self.criterion(out, data["target"])
-        mse = self.metric(out, data["target"])
+        loss = self.criterion(out, data["target"].float())
+        mse = self.metric(out, data["target"].float())
 
         self.log_dict(
             {"val_loss": loss, "val_mse": mse},
@@ -60,8 +60,8 @@ class ToxicityClassifier(pl.LightningModule):
 
     def test_step(self, data, *args, **kwargs):
         out = self(attention_mask=data["attention_mask"], input_ids=data["input_ids"])
-        loss = self.criterion(out, data["target"])
-        mse = self.metric(out, data["target"])
+        loss = self.criterion(out, data["target"].float())
+        mse = self.metric(out, data["target"].float())
 
         self.log_dict(
             {"test_loss": loss, "test_mse": mse},
